@@ -1,0 +1,147 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style type="text/css">
+  body {
+    background: linear-gradient(135deg, #2b4c3f 0%, #1a2f26 100%) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  #header, #footer, .breadcrumbs {
+    display: none !important;
+  }
+  #container {
+    background: transparent !important;
+    width: 100% !important;
+    max-width: 420px !important;
+    margin: 0 auto !important;
+    border: none !important;
+  }
+  #content {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
+    padding: 35px 30px !important;
+    margin: 0 !important;
+  }
+  .login-title {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  .login-title h1 {
+    color: #2b4c3f !important;
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    margin: 0 0 5px 0 !important;
+  }
+  .login-title p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+  }
+  .form-row {
+    padding: 10px 0 !important;
+    border-bottom: none !important;
+  }
+  .form-row label {
+    font-weight: 600 !important;
+    color: #333 !important;
+    display: block !important;
+    margin-bottom: 6px !important;
+  }
+  .form-row input[type="text"], 
+  .form-row input[type="password"] {
+    width: 100% !important;
+    padding: 10px 12px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+    font-size: 14px !important;
+  }
+  .form-row input[type="text"]:focus, 
+  .form-row input[type="password"]:focus {
+    border-color: #2b4c3f !important;
+    outline: none !important;
+  }
+  .submit-row {
+    padding: 20px 0 0 0 !important;
+    margin: 0 !important;
+    background: none !important;
+    border: none !important;
+    text-align: center !important;
+  }
+  .submit-row input[type="submit"] {
+    background: #2b4c3f !important;
+    color: #ffffff !important;
+    width: 100% !important;
+    padding: 12px !important;
+    border-radius: 6px !important;
+    border: none !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+  }
+  .submit-row input[type="submit"]:hover {
+    background: #1a2f26 !important;
+  }
+  .errornote {
+    background: #ffebe9 !important;
+    color: #d93025 !important;
+    border: 1px solid #ffc2c2 !important;
+    border-radius: 6px !important;
+    padding: 10px !important;
+    font-size: 13px !important;
+    margin-bottom: 15px !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-title">
+  <h1>UPLE Jají</h1>
+  <p>Sistema de Gestión Integral</p>
+</div>
+
+{% if form.errors and not form.non_field_errors %}
+<p class="errornote">
+{% if form.errors.items|length == 1 %}{% translate "Por favor corrija el error a continuación." %}{% else %}{% translate "Por favor corrija los errores a continuación." %}{% endif %}
+</p>
+{% endif %}
+
+{% if form.non_field_errors %}
+{% for error in form.non_field_errors %}
+<p class="errornote">
+    {{ error }}
+</p>
+{% endfor %}
+{% endif %}
+
+<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+  <div class="form-row">
+    {{ form.username.errors }}
+    <label for="id_username">Usuario:</label>
+    {{ form.username }}
+  </div>
+  <div class="form-row">
+    {{ form.password.errors }}
+    <label for="id_password">Contraseña:</label>
+    {{ form.password }}
+  </div>
+  {% url 'admin_password_reset' as password_reset_url %}
+  {% if password_reset_url %}
+  <div class="password-reset-link" style="text-align: right; margin-top: 5px;">
+    <a href="{{ password_reset_url }}" style="color: #2b4c3f; font-size: 12px; text-decoration: none;">¿Olvidaste tu contraseña?</a>
+  </div>
+  {% endif %}
+  <div class="submit-row">
+    <input type="submit" value="Iniciar Sesión">
+  </div>
+</form>
+{% endblock %}
